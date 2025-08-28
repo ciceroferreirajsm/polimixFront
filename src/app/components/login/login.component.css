@@ -1,0 +1,177 @@
+.login-container {
+  min-height: 100vh;
+  background-color: #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #e8e8e8;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.polimix {
+  background-color: #ff6600;
+  color: white;
+  padding: 8px 12px;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 2px;
+}
+
+.homologacao {
+  color: #dc3545;
+  font-weight: bold;
+  font-size: 20px;
+  margin-left: 5px;
+}
+
+.laboratorio {
+  color: #ff6600;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.login-box {
+  background-color: white;
+  max-width: 380px;
+  margin: 80px auto;
+  padding: 50px 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.login-box h2 {
+  color: #666;
+  margin-bottom: 40px;
+  font-weight: normal;
+  font-size: 18px;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.input-group i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #666;
+  z-index: 1;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 15px 15px 15px 45px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  background-color: #f8f9fa;
+  transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #ff6600;
+  background-color: white;
+}
+
+.input-group input::placeholder {
+  color: #aaa;
+}
+
+.login-btn {
+  width: 100%;
+  background-color: #ff9966;
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: #ff6600;
+}
+
+.login-btn:active {
+  background-color: #e55a00;
+}
+
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.polimix-logo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.logo-square {
+  width: 30px;
+  height: 30px;
+  background-color: #ff6600;
+  display: inline-block;
+}
+
+.polimix-text {
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.homologacao {
+  color: #dc3545;
+  font-weight: bold;
+  font-size: 20px;
+  margin-left: 5px;
+}
+/* Responsividade */
+@media (max-width: 480px) {
+  .header {
+    padding: 10px 20px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .login-box {
+    margin: 40px 20px;
+    padding: 30px 25px;
+  }
+
+  .polimix, .homologacao {
+    font-size: 16px;
+  }
+
+  .laboratorio {
+    font-size: 14px;
+  }
+
+}
