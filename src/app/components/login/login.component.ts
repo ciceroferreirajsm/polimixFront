@@ -32,10 +32,8 @@ export class LoginComponent {
           console.log('Login successful', response);
           // Salvar dados do usuário se necessário
           if (response && response.token) {
-            alert('Token.');
             localStorage.setItem('token', response.token);
           }
-          alert('home.');
           // Redirecionar para a tela home
           this.router.navigate(['/home']);
         },

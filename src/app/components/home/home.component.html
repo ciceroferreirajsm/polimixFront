@@ -6,7 +6,6 @@
         <span class="logo-square"></span>
         <span class="polimix-text">POLIMIX</span>
       </div>
-      <span class="laboratorio-text">Laboratório</span>
     </div>
 
     <div class="user-section">
@@ -18,9 +17,29 @@
   <!-- Navigation Menu -->
   <nav class="navigation">
     <div class="nav-items">
-      <button class="nav-item active" (click)="navigateTo('/inicio')">Início</button>
-      <button class="nav-item" (click)="navigateTo('/material')">Material ▼</button>
-      <button class="nav-item" (click)="navigateTo('/cadastro')">Cadastro ▼</button>
+      <button class="nav-item" (click)="navigateTo('/inicio')">Início</button>
+
+      <!-- Material Dropdown -->
+      <div class="nav-dropdown" (mouseenter)="showMaterialDropdown = true" (mouseleave)="showMaterialDropdown = false">
+        <button class="nav-item" [class.active]="showMaterialDropdown">Material ▼</button>
+        <div class="dropdown-menu" [class.show]="showMaterialDropdown">
+          <button class="dropdown-item" (click)="navigateTo('/material-base')">Material Base</button>
+          <button class="dropdown-item" (click)="navigateTo('/classe')">Classe</button>
+          <button class="dropdown-item" (click)="navigateTo('/tipo')">Tipo</button>
+          <button class="dropdown-item" (click)="navigateTo('/complemento')">Complemento</button>
+          <button class="dropdown-item" (click)="navigateTo('/unidade-medida')">Unidade Medida</button>
+        </div>
+      </div>
+
+      <!-- Cadastro Dropdown -->
+      <div class="nav-dropdown" (mouseenter)="showCadastroDropdown = true" (mouseleave)="showCadastroDropdown = false">
+        <button class="nav-item" [class.active]="showCadastroDropdown">Cadastro ▼</button>
+        <div class="dropdown-menu" [class.show]="showCadastroDropdown">
+          <button class="dropdown-item" (click)="navigateTo('/fornecedor')">Fornecedor</button>
+          <button class="dropdown-item" (click)="navigateTo('/fabrica')">Fabrica</button>
+        </div>
+      </div>
+
       <button class="nav-item" (click)="navigateTo('/produto-ctt')">Produto CTT</button>
       <button class="nav-item" (click)="navigateTo('/produto-unidade')">Produto Unidade</button>
       <button class="nav-item" (click)="navigateTo('/calculadora')">Calculadora</button>

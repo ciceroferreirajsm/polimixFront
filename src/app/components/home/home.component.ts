@@ -10,15 +10,20 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
+  showMaterialDropdown = false;
+  showCadastroDropdown = false;
 
   constructor(private router: Router) {}
 
   navigateTo(route: string) {
     this.router.navigate([route]);
+    // Fechar todos os dropdowns ao navegar
+    this.showMaterialDropdown = false;
+    this.showCadastroDropdown = false;
   }
 
   logout() {
-    // Implementar logout
+    localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
 }

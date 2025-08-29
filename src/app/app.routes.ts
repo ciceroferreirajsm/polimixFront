@@ -6,5 +6,23 @@ export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },
-  { path: '**', redirectTo: '/login' } // Rota coringa para páginas não encontradas
+
+  // Rotas do Material
+  { path: 'material-base', component: HomeComponent },
+  { path: 'classe', component: HomeComponent },
+  { path: 'tipo', component: HomeComponent },
+  { path: 'complemento', component: HomeComponent },
+  { path: 'unidade-medida', component: HomeComponent },
+
+  // Rotas do Cadastro
+  { path: 'fornecedor', component: HomeComponent },
+  { path: 'fabrica', component: HomeComponent },
+
+  // Outras rotas
+  { path: 'inicio', component: HomeComponent },
+  { path: 'produto-ctt', component: HomeComponent },
+  { path: 'produto-unidade', component: HomeComponent },
+  { path: 'calculadora', component: HomeComponent },
+
+  { path: '**', redirectTo: '/login' } // Rota coringa - manter por último
 ];
