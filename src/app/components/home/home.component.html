@@ -1,0 +1,37 @@
+<div class="home-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="logo-section">
+      <div class="polimix-logo">
+        <span class="logo-square"></span>
+        <span class="polimix-text">POLIMIX</span>
+      </div>
+      <span class="laboratorio-text">Laboratório</span>
+    </div>
+
+    <div class="user-section">
+      <span class="welcome-text">Bem vindo, TODO NOME</span>
+      <button class="logout-btn" (click)="logout()">Sair</button>
+    </div>
+  </header>
+
+  <!-- Navigation Menu -->
+  <nav class="navigation">
+    <div class="nav-items">
+      <button class="nav-item active" (click)="navigateTo('/inicio')">Início</button>
+      <button class="nav-item" (click)="navigateTo('/material')">Material ▼</button>
+      <button class="nav-item" (click)="navigateTo('/cadastro')">Cadastro ▼</button>
+      <button class="nav-item" (click)="navigateTo('/produto-ctt')">Produto CTT</button>
+      <button class="nav-item" (click)="navigateTo('/produto-unidade')">Produto Unidade</button>
+      <button class="nav-item" (click)="navigateTo('/calculadora')">Calculadora</button>
+      <button class="nav-item" (click)="navigateTo('/sair')">Sair</button>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <div class="content-area">
+      <!-- Conteúdo principal da aplicação será carregado aqui -->
+    </div>
+  </main>
+</div>

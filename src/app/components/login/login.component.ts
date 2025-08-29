@@ -30,7 +30,14 @@ export class LoginComponent {
       .subscribe({
         next: (response) => {
           console.log('Login successful', response);
-          this.router.navigate(['/dashboard']);
+          // Salvar dados do usuário se necessário
+          if (response && response.token) {
+            alert('Token.');
+            localStorage.setItem('token', response.token);
+          }
+          alert('home.');
+          // Redirecionar para a tela home
+          this.router.navigate(['/home']);
         },
         error: (error) => {
           console.error('Login failed', error);
