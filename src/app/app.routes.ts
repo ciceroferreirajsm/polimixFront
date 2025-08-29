@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
+import { MaterialBaseComponent } from './components/material-base/material-base.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -8,7 +9,7 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
 
   // Rotas do Material
-  { path: 'material-base', component: HomeComponent },
+  { path: 'material-base', component: MaterialBaseComponent },
   { path: 'classe', component: HomeComponent },
   { path: 'tipo', component: HomeComponent },
   { path: 'complemento', component: HomeComponent },
@@ -24,5 +25,5 @@ export const routes: Routes = [
   { path: 'produto-unidade', component: HomeComponent },
   { path: 'calculadora', component: HomeComponent },
 
-  { path: '**', redirectTo: '/login' } // Rota coringa - manter por último
+  { path: '**', redirectTo: '/login' }
 ];

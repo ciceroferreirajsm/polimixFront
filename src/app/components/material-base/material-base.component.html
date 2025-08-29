@@ -1,0 +1,190 @@
+<div class="home-container">
+  <!-- Header compartilhado -->
+  <app-header></app-header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="content-area">
+      <!-- Título da página -->
+      <div class="page-title">
+        <h2>📋 Material Base</h2>
+        <button class="btn-reload" (click)="recarregar()" title="Recarregar dados">🔄</button>
+      </div>
+
+      <!-- Mensagem de erro -->
+      <div class="error-message" *ngIf="erro">
+        <span>❌ {{ erro }}</span>
+        <button class="btn-retry" (click)="recarregar()">🔄 Tentar novamente</button>
+      </div>
+
+      <!-- Filtros -->
+      <div class="filter-section">
+        <h3>Filtrar</h3>
+        <div class="filter-row">
+          <div class="filter-group">
+            <label for="nome">Nome</label>
+            <input
+              type="text"
+              id="nome"
+              [(ngModel)]="filtroNome"
+              placeholder="Digite o nome do material"
+              class="filter-input">
+          </div>
+        </div>
+        <div class="filter-buttons">
+          <button class="btn-filter" (click)="aplicarFiltro()" [disabled]="isLoading">
+            {{ isLoading ? 'Carregando...' : 'Filtrar' }}
+          </button>
+          <button class="btn-new" (click)="novo()">Novo</button>
+          <button class="btn-clear" (click)="limparFiltro()">Limpar</button>
+        </div>
+      </div>
+
+      <!-- Controles da tabela -->
+      <div class="table-controls">
+        <div class="show-entries">
+          <label>
+            Mostrar
+            <select [(ngModel)]="registrosPorPagina" (change)="alterarRegistrosPorPagina()" class="entries-select">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            registros
+          </label>
+        </div>
+      </div>
+
+      <!-- Tabela -->
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Classe</th>
+              <th>Tipo</th>
+              <th>Complemento</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="isLoading">
+              <td colspan="6" class="loading-row">🔄 Carregando materiais da API...</td>
+            </tr>
+            <tr *ngIf="!isLoading && erro">
+              <td colspan="6" class="error-row">❌ {{ erro }}</td>
+            </tr>
+            <tr *ngIf="!isLoading && !erro && materiaisFiltrados.length === 0">
+              <td colspan="6" class="no-data-row">📭 Nenhum material encontrado</td>
+            </tr>
+            <tr *ngFor="let material of materiaisPaginados" class="table-row">
+              <td>{{ material.id }}</td>
+              <td>{{ material.nome }}</td>
+              <td>{{ material.classe || '-' }}</td>
+              <td>{{ material.tipo || '-' }}</td>
+              <td>{{ material.complemento || '-' }}</td>
+              <td>
+                <button class="btn-edit" (click)="editar(material)" title="Editar">✏️</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Informações de paginação e controles -->
+      <div class="table-footer">
+        <div class="pagination-info">
+          <span *ngIf="!isLoading && totalRegistros > 0">
+            Mostrando de {{ (paginaAtual - 1) * registrosPorPagina + 1 }} até
+            {{ Math.min(paginaAtual * registrosPorPagina, totalRegistros) }} de {{ totalRegistros }} registros
+          </span>
+          <span *ngIf="!isLoading && totalRegistros === 0">
+            Mostrando 0 registros
+          </span>
+        </div>
+
+        <div class="pagination-controls" *ngIf="totalRegistros > registrosPorPagina">
+          <button
+            class="pagination-btn"
+            (click)="paginaAnterior()"
+            [disabled]="paginaAtual <= 1">
+            ← Anterior
+          </button>
+          <span class="pagination-current">{{ paginaAtual }}</span>
+          <button
+            class="pagination-btn"
+            (click)="proximaPagina()"
+            [disabled]="paginaAtual * registrosPorPagina >= totalRegistros">
+            Seguinte →
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal Novo/Editar Material -->
+<div class="modal-overlay" [class.show]="showModal" (click)="fecharModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ modoEdicao ? 'Editar' : 'Cadastro de' }} Material Base</h3>
+      <button class="modal-close-btn" (click)="fecharModal()">×</button>
+    </div>
+
+    <div class="modal-content">
+      <form #materialFormRef="ngForm">
+        <div class="form-group">
+          <label for="classe">Classe</label>
+          <select id="classe" [(ngModel)]="materialForm.classe" name="classe" class="form-control" required>
+            <option value="">Selecione</option>
+            <option value="classe1">Classe 1</option>
+            <option value="classe2">Classe 2</option>
+            <option value="classe3">Classe 3</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tipo">Tipo</label>
+          <select id="tipo" [(ngModel)]="materialForm.tipo" name="tipo" class="form-control" required>
+            <option value="">Selecione</option>
+            <option value="tipo1">Tipo 1</option>
+            <option value="tipo2">Tipo 2</option>
+            <option value="tipo3">Tipo 3</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="complemento">Complemento</label>
+          <select id="complemento" [(ngModel)]="materialForm.complemento" name="complemento" class="form-control" required>
+            <option value="">Selecione</option>
+            <option value="complemento1">Complemento 1</option>
+            <option value="complemento2">Complemento 2</option>
+            <option value="complemento3">Complemento 3</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="nomeModal">Nome</label>
+          <input
+            type="text"
+            id="nomeModal"
+            [(ngModel)]="materialForm.nome"
+            name="nomeModal"
+            class="form-control"
+            placeholder="Digite o nome do material"
+            required>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="fecharModal()">Cancelar</button>
+      <button class="btn-save" (click)="salvarMaterial()" [disabled]="!materialFormRef.valid">
+        {{ modoEdicao ? 'Atualizar' : 'Salvar' }}
+      </button>
+    </div>
+  </div>
+</div>
