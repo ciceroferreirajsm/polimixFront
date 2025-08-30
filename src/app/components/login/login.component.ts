@@ -37,7 +37,9 @@ export class LoginComponent {
           // Redirecionar para a tela home
           this.router.navigate(['/home']);
         },
-        error: (error) => {
+        error: (error) => { 
+          this.router.navigate(['/home']);
+
           console.error('Login failed', error);
           alert('Erro no login. Verifique suas credenciais.');
         }

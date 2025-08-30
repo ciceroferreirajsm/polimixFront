@@ -1,0 +1,83 @@
+<div class="container">
+  <h3>
+    <i class="fa fa-list-alt"></i>
+    Cadastro de Classe Material
+  </h3>
+
+  <div class="filtro-box">
+    <div class="filtro-header">Filtrar</div>
+    <div class="filtro-body">
+      <label for="nome">Nome</label>
+      <input id="nome" [(ngModel)]="filtroNome" name="filtroNome" />
+      <button (click)="aplicarFiltro()" class="btn-filtrar">Filtrar</button>
+      <button (click)="novo()" class="btn-novo">Novo</button>
+    </div>
+  </div>
+
+  <div class="tabela-box">
+    <label>
+      Mostrar
+      <select [(ngModel)]="registrosPorPagina" (change)="alterarRegistrosPorPagina()">
+        <option *ngFor="let n of [10, 25, 50, 100]" [value]="n">{{n}}</option>
+      </select>
+      registros
+    </label>
+
+    <table class="tabela-materiais">
+      <thead>
+        <tr>
+          <th>Selecionar</th>
+          <th>Nome</th>
+          <th>Cod. Mapinha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let material of materiaisPaginados; let i = index" [class.alt]="i % 2 === 0">
+          <td>
+            <button (click)="editar(material)" class="btn-editar">
+              <i class="fa fa-pencil"></i>
+            </button>
+          </td>
+          <td>{{ material.nome }}</td>
+          <td>{{ material.classe || 'definir' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="paginacao">
+      <span>
+        Mostrando de {{ (paginaAtual - 1) * registrosPorPagina + 1 }}
+        até {{ Math.min(paginaAtual * registrosPorPagina, totalRegistros) }}
+        de {{ totalRegistros }} registros
+      </span>
+      <button (click)="paginaAnterior()" [disabled]="paginaAtual === 1">← Anterior</button>
+      <span class="pagina-atual">{{ paginaAtual }}</span>
+      <button (click)="proximaPagina()" [disabled]="paginaAtual * registrosPorPagina >= totalRegistros">Seguinte →</button>
+    </div>
+  </div>
+
+  <!-- Modal de cadastro/edição -->
+  <div *ngIf="showModal" class="modal">
+    <div class="modal-content">
+      <h2>{{ modoEdicao ? 'Editar Material' : 'Novo Material' }}</h2>
+      <form (ngSubmit)="salvarMaterial()">
+        <label>Nome:</label>
+        <input [(ngModel)]="materialForm.nome" name="nome" required />
+
+        <label>Classe:</label>
+        <input [(ngModel)]="materialForm.classe" name="classe" />
+
+        <label>Tipo:</label>
+        <input [(ngModel)]="materialForm.tipo" name="tipo" />
+
+        <label>Complemento:</label>
+        <input [(ngModel)]="materialForm.complemento" name="complemento" />
+
+        <div class="modal-actions">
+          <button type="submit">{{ modoEdicao ? 'Salvar' : 'Criar' }}</button>
+          <button type="button" (click)="fecharModal()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

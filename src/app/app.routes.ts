@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { MaterialBaseComponent } from './components/material-base/material-base.component';
+import { MaterialClasseComponent } from './components/material-classe/material-classe.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -10,7 +11,7 @@ export const routes: Routes = [
 
   // Rotas do Material
   { path: 'material-base', component: MaterialBaseComponent },
-  { path: 'classe', component: HomeComponent },
+  { path: 'classe', component: MaterialClasseComponent },
   { path: 'tipo', component: HomeComponent },
   { path: 'complemento', component: HomeComponent },
   { path: 'unidade-medida', component: HomeComponent },
