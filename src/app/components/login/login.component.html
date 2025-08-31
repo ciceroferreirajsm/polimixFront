@@ -1,40 +1,45 @@
 <div class="login-container">
-  <div class="header">
-    <div class="logo">
+  <!-- Header com logo -->
+  <header class="header">
+    <div class="logo-section">
       <div class="polimix-logo">
-        <span class="logo-square"></span>
-        <span class="polimix-text">POLIMIX</span>
+        <img src="https://margomixctthomolog.polimix.com.br/assets/img/logo.png"
+             alt="POLIMIX"
+             class="logo-image">
       </div>
       <span class="homologacao">HOMOLOGAÇÃO</span>
     </div>
     <div class="laboratorio">Laboratório</div>
-  </div>
+  </header>
 
-  <div class="login-box">
-    <h2>Acesso Restrito</h2>
+  <!-- Área principal de login -->
+  <div class="login-main">
+    <div class="login-box">
+      <h2 class="login-title">Acesso Restrito</h2>
 
-    <form (ngSubmit)="onLogin()" #loginForm="ngForm">
-      <div class="input-group">
-        <i class="icon-user">👤</i>
-        <input
-          type="text"
-          [(ngModel)]="username"
-          name="username"
-          placeholder="Username"
-          required>
-      </div>
+      <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="login-form">
+        <div class="input-group">
+          <input
+            type="text"
+            [(ngModel)]="username"
+            name="username"
+            placeholder="augustoalbuquerque"
+            class="login-input"
+            required>
+        </div>
 
-      <div class="input-group">
-        <i class="icon-lock">🔒</i>
-        <input
-          type="password"
-          [(ngModel)]="password"
-          name="password"
-          placeholder="Senha"
-          required>
-      </div>
+        <div class="input-group">
+          <input
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="•••••••"
+            class="login-input"
+            required>
+        </div>
 
-      <button type="submit" class="login-btn">Acessar</button>
-    </form>
+        <button type="submit" class="login-btn">Acessar</button>
+      </form>
+    </div>
   </div>
 </div>

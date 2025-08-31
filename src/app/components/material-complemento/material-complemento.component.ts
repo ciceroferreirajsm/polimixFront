@@ -51,13 +51,13 @@ interface ApiResponse {
 }
 
 @Component({
-  selector: 'app-material-base',
+  selector: 'app-material-complemento',
   standalone: true,
   imports: [CommonModule, FormsModule, HeaderComponent, HttpClientModule],
-  templateUrl: './material-base.component.html',
-  styleUrls: ['./material-base.component.css']
+  templateUrl: './material-complemento.component.html',
+  styleUrls: ['./material-complemento.component.css']
 })
-export class MaterialBaseComponent implements OnInit {
+export class MaterialComplementoComponent implements OnInit {
   // Propriedades de dados
   materiais: Material[] = [];
   materiaisFiltrados: Material[] = [];
