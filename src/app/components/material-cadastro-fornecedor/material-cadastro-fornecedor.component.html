@@ -7,7 +7,7 @@
     <div class="content-area">
       <!-- Título da página -->
       <div class="page-title">
-        <h2>📋 Cadastro de Classe Material</h2>
+        <h2>📋 Cadastro de Fornecedor </h2>
         <button class="btn-reload" (click)="recarregar()" title="Recarregar dados">🔄</button>
       </div>
      <!-- Filtros -->
@@ -55,7 +55,6 @@
             <tr>
               <th class="col-selecionar">Selecionar</th>
               <th class="col-nome">Nome</th>
-              <th class="col-mapinha">Cod. Mapinha</th>
             </tr>
           </thead>
           <tbody>
@@ -75,7 +74,6 @@
                 <button class="btn-edit" (click)="editar(material)" title="Editar">✏️</button>
               </td>
               <td class="col-nome">{{ material.nome }}</td>
-              <td class="col-mapinha">{{ material.codMapinha }}</td>
             </tr>
           </tbody>
         </table>

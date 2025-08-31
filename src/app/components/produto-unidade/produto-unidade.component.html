@@ -1,0 +1,410 @@
+<div class="home-container">
+  <!-- Header compartilhado -->
+  <app-header></app-header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="content-area">
+      <!-- Título da página -->
+      <div class="page-title">
+        <h2>📋 Produto Unidade</h2>
+        <button class="btn-reload" (click)="recarregar()" title="Recarregar dados">🔄</button>
+      </div>
+<!-- Filtros -->
+<div class="filter-section">
+  <div class="filter-header">Filtrar</div>
+  <div class="filter-content">
+    <div class="filter-group">
+      <label for="nome">Centro de Resultado</label>
+      <select
+        id="nome"
+        [(ngModel)]="filtroNome"
+        class="filter-input">
+        <option value="">Selecione um centro de resultado</option>
+        <option value="APG">APG</option>
+        <option value="ATB">ATB</option>
+        <option value="BBT">BBT</option>
+        <option value="BGA">BGA</option>
+        <option value="BGP">BGP</option>
+        <option value="BRA">BRA</option>
+        <option value="BRI">BRI</option>
+        <option value="CCL">CCL</option>
+        <option value="AMG">AMG</option>
+        <option value="ARI">ARI</option>
+        <option value="BGA">BGA</option>
+        <option value="BRI">BRI</option>
+        <option value="ITF">ITF</option>
+      </select>
+    </div>
+    <div class="filter-buttons">
+      <button class="btn-filter" (click)="aplicarFiltro()" [disabled]="isLoading">
+        Filtrar
+      </button>
+      <button class="btn-new" (click)="novo()">Novo</button>
+    </div>
+  </div>
+</div>
+
+      <!-- Controles da tabela -->
+      <div class="table-controls">
+        <div class="show-entries">
+          <label>
+            Mostrar
+            <select [(ngModel)]="registrosPorPagina" (change)="alterarRegistrosPorPagina()" class="entries-select">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            registros
+          </label>
+        </div>
+      </div>
+
+<!-- Tabela -->
+<div class="table-wrapper">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th class="col-selecionar">Selecionar</th>
+        <th class="col-nome">Centro Resultado</th>
+        <th class="col-sigla">Sigla</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="isLoading">
+        <td colspan="3" class="status-row">🔄 Carregando unidades da API...</td>
+      </tr>
+      <tr *ngIf="!isLoading && erro">
+        <td colspan="3" class="status-row">❌ {{ erro }}</td>
+      </tr>
+      <tr *ngIf="!isLoading && !erro && materiaisFiltrados.length === 0">
+        <td colspan="3" class="status-row">📋 Dados não encontrado</td>
+      </tr>
+      <tr *ngFor="let material of materiaisPaginados; let i = index"
+          [class.row-even]="i % 2 === 0"
+          [class.row-odd]="i % 2 === 1">
+        <td class="col-selecionar">
+          <button class="btn-edit" (click)="editar(material)" title="Editar">✏️</button>
+        </td>
+        <td class="col-nome">{{ material.nome }}</td>
+        <td class="col-sigla">{{ material.sigla }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+      <!-- Informações de paginação e controles -->
+      <div class="table-footer">
+        <div class="pagination-info">
+          <span *ngIf="!isLoading && totalRegistros > 0">
+            Mostrando de {{ (paginaAtual - 1) * registrosPorPagina + 1 }} até
+            {{ Math.min(paginaAtual * registrosPorPagina, totalRegistros) }} de {{ totalRegistros }} registros
+          </span>
+          <span *ngIf="!isLoading && totalRegistros === 0">
+            Mostrando 0 registros
+          </span>
+        </div>
+
+        <div class="pagination-controls" *ngIf="totalRegistros > registrosPorPagina">
+          <button
+            class="pagination-btn"
+            (click)="paginaAnterior()"
+            [disabled]="paginaAtual <= 1">
+            ← Anterior
+          </button>
+          <span class="pagination-current">{{ paginaAtual }}</span>
+          <button
+            class="pagination-btn"
+            (click)="proximaPagina()"
+            [disabled]="paginaAtual * registrosPorPagina >= totalRegistros">
+            Seguinte →
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal Novo/Editar Unidade -->
+<div class="modal-overlay" [class.show]="showModal" (click)="fecharModal()">
+  <div class="modal-container modal-medium" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Cadastro de Produto CTT - {{ materialForm.material || 'CIMENTO - CP I - 40 RS' }} - undefined - {{ materialForm.fornecedor || 'Votorantim' }} - {{ materialForm.fabrica || 'Santa Helena' }}</h3>
+      <button class="modal-close-btn" (click)="fecharModal()">×</button>
+    </div>
+
+    <div class="modal-content">
+      <form #materialFormRef="ngForm">
+        <!-- Seção Valor Gerencial e Frete Gerencial -->
+        <div class="checkbox-row">
+          <div class="checkbox-group">
+            <input type="checkbox" id="valorGerencial" [(ngModel)]="materialForm.valorGerencial" name="valorGerencial">
+            <label for="valorGerencial">Valor Gerencial</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="freteGerencial" [(ngModel)]="materialForm.freteGerencial" name="freteGerencial">
+            <label for="freteGerencial">Frete Gerencial</label>
+          </div>
+        </div>
+
+        <!-- Primeira linha: Código Técnico, Código Prod Protheus, Material Base, Status -->
+        <div class="form-row-4">
+          <div class="form-group">
+            <label for="codigoTecnico">Código Técnico</label>
+            <input
+              type="text"
+              id="codigoTecnico"
+              [(ngModel)]="materialForm.codigoTecnico"
+              name="codigoTecnico"
+              class="form-control"
+              placeholder="X1">
+          </div>
+
+          <div class="form-group">
+            <label for="codigoProdProtheus">Código Prod Protheus</label>
+            <input
+              type="text"
+              id="codigoProdProtheus"
+              [(ngModel)]="materialForm.codigoProdProtheus"
+              name="codigoProdProtheus"
+              class="form-control"
+              placeholder="123">
+          </div>
+
+          <div class="form-group">
+            <label for="materialBase">Material Base</label>
+            <select
+              id="materialBase"
+              [(ngModel)]="materialForm.materialBase"
+              name="materialBase"
+              class="form-control">
+              <option value="">CIMENTO - CP I - 40...</option>
+              <option value="CIMENTO - CP I - 40...">CIMENTO - CP I - 40...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="status">Status</label>
+            <select
+              id="status"
+              [(ngModel)]="materialForm.status"
+              name="status"
+              class="form-control">
+              <option value="">Ativo</option>
+              <option value="Ativo">Ativo</option>
+              <option value="Inativo">Inativo</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Segunda linha: Fornecedor, Fábrica, Massa Específica, Massa Unitária -->
+        <div class="form-row-4">
+          <div class="form-group">
+            <label for="fornecedor">Fornecedor</label>
+            <select
+              id="fornecedor"
+              [(ngModel)]="materialForm.fornecedor"
+              name="fornecedor"
+              class="form-control">
+              <option value="">Votorantim</option>
+              <option value="Votorantim">Votorantim</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="fabrica">Fábrica</label>
+            <select
+              id="fabrica"
+              [(ngModel)]="materialForm.fabrica"
+              name="fabrica"
+              class="form-control">
+              <option value="">Santa Helena</option>
+              <option value="Santa Helena">Santa Helena</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="massaEspecifica">Massa Específica</label>
+            <input
+              type="number"
+              id="massaEspecifica"
+              [(ngModel)]="materialForm.massaEspecifica"
+              name="massaEspecifica"
+              class="form-control"
+              placeholder="2220">
+          </div>
+
+          <div class="form-group">
+            <label for="massaUnitaria">Massa Unitária</label>
+            <input
+              type="number"
+              id="massaUnitaria"
+              [(ngModel)]="materialForm.massaUnitaria"
+              name="massaUnitaria"
+              class="form-control"
+              placeholder="2000">
+          </div>
+        </div>
+
+        <!-- Terceira linha: Unidade de Medida, CO2 Material, CO2 Transporte, Distância -->
+        <div class="form-row-4">
+          <div class="form-group">
+            <label for="unidadeMedida">Unidade de Medida</label>
+            <select
+              id="unidadeMedida"
+              [(ngModel)]="materialForm.unidadeMedida"
+              name="unidadeMedida"
+              class="form-control">
+              <option value="">Kg</option>
+              <option value="Kg">Kg</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="co2Material">CO2 Material</label>
+            <input
+              type="text"
+              id="co2Material"
+              [(ngModel)]="materialForm.co2Material"
+              name="co2Material"
+              class="form-control"
+              placeholder="observacao">
+          </div>
+
+          <div class="form-group">
+            <label for="co2Transporte">CO2 Transporte</label>
+            <input
+              type="text"
+              id="co2Transporte"
+              [(ngModel)]="materialForm.co2Transporte"
+              name="co2Transporte"
+              class="form-control"
+              placeholder="123">
+          </div>
+
+          <div class="form-group">
+            <label for="distancia">Distância (KM)</label>
+            <input
+              type="number"
+              id="distancia"
+              [(ngModel)]="materialForm.distancia"
+              name="distancia"
+              class="form-control"
+              placeholder="2222">
+          </div>
+        </div>
+
+        <!-- Seções lado a lado: Valor Gerencial e Frete Gerencial -->
+        <div class="sections-container">
+          <!-- Valor Gerencial -->
+          <div class="section-left">
+            <h4>Valor Gerencial</h4>
+            <div class="section-inputs">
+              <div class="input-group">
+                <label for="dataInicioValor">Data de Início</label>
+                <input
+                  type="date"
+                  id="dataInicioValor"
+                  [(ngModel)]="materialForm.dataInicioValor"
+                  name="dataInicioValor"
+                  class="form-control-small"
+                  placeholder="dd/mm/aaaa">
+              </div>
+              <div class="input-group">
+                <label for="valorGerencialInput">Valor</label>
+                <input
+                  type="number"
+                  id="valorGerencialInput"
+                  [(ngModel)]="materialForm.valorGerencialInput"
+                  name="valorGerencialInput"
+                  class="form-control-small">
+              </div>
+              <div class="input-group">
+                <label for="acaoValor">Ação</label>
+                <button type="button" class="btn-adicionar">Adicionar</button>
+              </div>
+            </div>
+            <table class="section-table">
+              <thead>
+                <tr>
+                  <th>Ação</th>
+                  <th>Data Início</th>
+                  <th>Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Dados serão adicionados dinamicamente -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Frete Gerencial -->
+          <div class="section-right">
+            <h4>Frete Gerencial</h4>
+            <div class="section-inputs">
+              <div class="input-group">
+                <label for="dataInicioFrete">Data de Início</label>
+                <input
+                  type="date"
+                  id="dataInicioFrete"
+                  [(ngModel)]="materialForm.dataInicioFrete"
+                  name="dataInicioFrete"
+                  class="form-control-small"
+                  placeholder="dd/mm/aaaa">
+              </div>
+              <div class="input-group">
+                <label for="valorFrete">Valor</label>
+                <input
+                  type="number"
+                  id="valorFrete"
+                  [(ngModel)]="materialForm.valorFrete"
+                  name="valorFrete"
+                  class="form-control-small">
+              </div>
+              <div class="input-group">
+                <label for="acaoFrete">Ação</label>
+                <button type="button" class="btn-adicionar">Adicionar</button>
+              </div>
+            </div>
+            <table class="section-table">
+              <thead>
+                <tr>
+                  <th>Ação</th>
+                  <th>Data Início</th>
+                  <th>Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>🗑️</td>
+                  <td>2025-02-08T00:00:00</td>
+                  <td>11</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Observação -->
+        <div class="observacao-section">
+          <div class="form-group">
+            <label for="observacao">Observação</label>
+            <textarea
+              id="observacao"
+              [(ngModel)]="materialForm.observacao"
+              name="observacao"
+              class="form-control-textarea"
+              placeholder="observacao"
+              rows="4"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-salvar">Salvar</button>
+      <button class="btn-cancelar" (click)="fecharModal()">Cancelar</button>
+    </div>
+  </div>
+</div>

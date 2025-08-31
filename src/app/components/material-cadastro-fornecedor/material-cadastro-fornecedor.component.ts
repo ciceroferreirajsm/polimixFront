@@ -31,7 +31,6 @@ interface Material {
   classe?: string;
   tipo?: string;
   complemento?: string;
-  codMapinha?: string;
 }
 
 interface MaterialForm {
@@ -52,13 +51,13 @@ interface ApiResponse {
 }
 
 @Component({
-  selector: 'app-material-classe',
+  selector: 'app-material-cadastro-fornecedor',
   standalone: true,
   imports: [CommonModule, FormsModule, HeaderComponent, HttpClientModule],
-  templateUrl: './material-classe.component.html',
-  styleUrls: ['./material-classe.component.css']
+  templateUrl: './material-cadastro-fornecedor.component.html',
+  styleUrls: ['./material-cadastro-fornecedor.component.css']
 })
-export class MaterialClasseComponent implements OnInit {
+export class MaterialCadastroFornecedorComponent implements OnInit {
   // Propriedades de dados
   materiais: Material[] = [];
   materiaisFiltrados: Material[] = [];

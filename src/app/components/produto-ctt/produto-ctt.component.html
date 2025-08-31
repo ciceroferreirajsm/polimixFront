@@ -1,0 +1,320 @@
+<div class="home-container">
+  <!-- Header compartilhado -->
+  <app-header></app-header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="content-area">
+      <!-- Título da página -->
+      <div class="page-title">
+        <h2>📋 Cadastro Produto CTT</h2>
+      </div>
+
+      <!-- Filtros -->
+      <div class="filter-section">
+        <div class="filter-header">Filtrar</div>
+        <div class="filter-content">
+          <div class="filter-row">
+            <div class="filter-group">
+              <label for="codigoTecnico">Código Técnico</label>
+              <input
+                type="text"
+                id="codigoTecnico"
+                [(ngModel)]="filtroCodigoTecnico"
+                placeholder=""
+                class="filter-input">
+            </div>
+            <div class="filter-group">
+              <label for="material">Material</label>
+              <input
+                type="text"
+                id="material"
+                [(ngModel)]="filtroMaterial"
+                placeholder=""
+                class="filter-input">
+            </div>
+            <div class="filter-group">
+              <label for="fornecedor">Fornecedor</label>
+              <input
+                type="text"
+                id="fornecedor"
+                [(ngModel)]="filtroFornecedor"
+                placeholder=""
+                class="filter-input">
+            </div>
+            <div class="filter-group">
+              <label for="fabrica">Fábrica</label>
+              <input
+                type="text"
+                id="fabrica"
+                [(ngModel)]="filtroFabrica"
+                placeholder=""
+                class="filter-input">
+            </div>
+          </div>
+          <div class="filter-buttons">
+            <button class="btn-filter" (click)="aplicarFiltro()" [disabled]="isLoading">
+              Filtrar
+            </button>
+            <button class="btn-new" (click)="novo()">Novo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controles da tabela -->
+      <div class="table-controls">
+        <div class="show-entries">
+          <label>
+            Mostrar
+            <select [(ngModel)]="registrosPorPagina" (change)="alterarRegistrosPorPagina()" class="entries-select">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            registros
+          </label>
+        </div>
+      </div>
+
+      <!-- Tabela -->
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th class="col-selecionar">Selecionar</th>
+              <th class="col-material">Material</th>
+              <th class="col-codigo">Código Técnico</th>
+              <th class="col-fornecedor">Fornecedor</th>
+              <th class="col-fabrica">Fábrica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="isLoading">
+              <td colspan="5" class="status-row">🔄 Carregando produtos da API...</td>
+            </tr>
+            <tr *ngIf="!isLoading && erro">
+              <td colspan="5" class="status-row">❌ {{ erro }}</td>
+            </tr>
+            <tr *ngIf="!isLoading && !erro && produtosFiltrados.length === 0">
+              <td colspan="5" class="status-row">📋 Dados não encontrado</td>
+            </tr>
+            <tr *ngFor="let produto of produtosPaginados; let i = index"
+                [class.row-even]="i % 2 === 0"
+                [class.row-odd]="i % 2 === 1">
+              <td class="col-selecionar">
+                <button class="btn-edit" (click)="editar(produto)" title="Editar">✏️</button>
+              </td>
+              <td class="col-material">{{ produto.material }}</td>
+              <td class="col-codigo">{{ produto.codigoTecnico }}</td>
+              <td class="col-fornecedor">{{ produto.fornecedor }}</td>
+              <td class="col-fabrica">{{ produto.fabrica }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Informações de paginação e controles -->
+      <div class="table-footer">
+        <div class="pagination-info">
+          <span *ngIf="!isLoading && totalRegistros > 0">
+            Mostrando de {{ (paginaAtual - 1) * registrosPorPagina + 1 }} até {{ Math.min(paginaAtual * registrosPorPagina, totalRegistros) }} de {{ totalRegistros }} registros
+          </span>
+          <span *ngIf="!isLoading && totalRegistros === 0">
+            Mostrando 0 registros
+          </span>
+        </div>
+
+        <div class="pagination-controls" *ngIf="totalRegistros > registrosPorPagina">
+          <button
+            class="pagination-btn"
+            (click)="paginaAnterior()"
+            [disabled]="paginaAtual <= 1">
+            ← Anterior
+          </button>
+          <span class="pagination-current">{{ paginaAtual }}</span>
+          <button
+            class="pagination-btn"
+            (click)="proximaPagina()"
+            [disabled]="paginaAtual * registrosPorPagina >= totalRegistros">
+            Seguinte →
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal Novo/Editar Produto -->
+<div class="modal-overlay" [class.show]="showModal" (click)="fecharModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Cadastro de Produto CTT</h3>
+      <button class="modal-close-btn" (click)="fecharModal()">×</button>
+    </div>
+
+    <div class="modal-content">
+      <form #produtoFormRef="ngForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="codigoTecnicoModal">Código Técnico</label>
+            <input
+              type="text"
+              id="codigoTecnicoModal"
+              [(ngModel)]="produtoForm.codigoTecnico"
+              name="codigoTecnicoModal"
+              class="form-control"
+              placeholder="X1"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="codigoProdProtheus">Código Prod Protheus</label>
+            <input
+              type="text"
+              id="codigoProdProtheus"
+              [(ngModel)]="produtoForm.codigoProdProtheus"
+              name="codigoProdProtheus"
+              class="form-control"
+              placeholder="123"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="materialBaseModal">Material Base</label>
+            <select
+              id="materialBaseModal"
+              [(ngModel)]="produtoForm.materialBase"
+              name="materialBaseModal"
+              class="form-control"
+              required>
+              <option value="">Selecione</option>
+              <option value="CIMENTO - CP I - 40...">CIMENTO - CP I - 40...</option>
+              <option value="CIMENTO - CP I - ARI RS">CIMENTO - CP I - ARI RS</option>
+              <option value="Agregado Graúdo - Brita 1 - F 40">Agregado Graúdo - Brita 1 - F 40</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="statusModal">Status</label>
+            <select
+              id="statusModal"
+              [(ngModel)]="produtoForm.status"
+              name="statusModal"
+              class="form-control"
+              required>
+              <option value="">Selecione</option>
+              <option value="Ativo">Ativo</option>
+              <option value="Inativo">Inativo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fornecedorModal">Fornecedor</label>
+            <select
+              id="fornecedorModal"
+              [(ngModel)]="produtoForm.fornecedor"
+              name="fornecedorModal"
+              class="form-control"
+              required>
+              <option value="">Selecione</option>
+              <option value="Votorantim">Votorantim</option>
+              <option value="Mizu">Mizu</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="fabricaModal">Fábrica</label>
+            <select
+              id="fabricaModal"
+              [(ngModel)]="produtoForm.fabrica"
+              name="fabricaModal"
+              class="form-control"
+              required>
+              <option value="">Selecione</option>
+              <option value="Santa Helena">Santa Helena</option>
+              <option value="Manaus">Manaus</option>
+              <option value="Mogi das Cruzes">Mogi das Cruzes</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="massaEspecifica">Massa Específica</label>
+            <input
+              type="number"
+              id="massaEspecifica"
+              [(ngModel)]="produtoForm.massaEspecifica"
+              name="massaEspecifica"
+              class="form-control"
+              placeholder="2220,000"
+              step="0.001"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="massaUnitaria">Massa Unitária</label>
+            <input
+              type="number"
+              id="massaUnitaria"
+              [(ngModel)]="produtoForm.massaUnitaria"
+              name="massaUnitaria"
+              class="form-control"
+              placeholder="2000"
+              required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="unidadeMedida">Unidade de Medida</label>
+            <select
+              id="unidadeMedida"
+              [(ngModel)]="produtoForm.unidadeMedida"
+              name="unidadeMedida"
+              class="form-control"
+              required>
+              <option value="">Selecione</option>
+              <option value="Kg">Kg</option>
+              <option value="g">g</option>
+              <option value="t">t</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="co2Material">CO2 Material</label>
+            <input
+              type="text"
+              id="co2Material"
+              [(ngModel)]="produtoForm.co2Material"
+              name="co2Material"
+              class="form-control"
+              placeholder="123"
+              required>
+          </div>
+        </div>
+
+        <div class="form-row full-width">
+          <div class="form-group">
+            <label for="observacao">Observação</label>
+            <textarea
+              id="observacao"
+              [(ngModel)]="produtoForm.observacao"
+              name="observacao"
+              class="form-control textarea"
+              placeholder="observacao"
+              rows="4"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-save" (click)="salvarProduto()" [disabled]="!produtoFormRef.valid">
+        Salvar
+      </button>
+      <button class="btn-cancel" (click)="fecharModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
