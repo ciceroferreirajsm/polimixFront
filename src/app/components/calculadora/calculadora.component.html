@@ -1,0 +1,100 @@
+<div class="home-container">
+  <!-- Header compartilhado -->
+  <app-header></app-header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="content-area">
+      <!-- Título da página -->
+      <div class="page-title">
+        <h2>📋 Calculadora</h2>
+        <button class="btn-reload" (click)="recarregar()" title="Recarregar dados">🔄</button>
+      </div>
+
+      <!-- Filtros -->
+      <div class="filter-section">
+        <div class="filter-header">Filtrar</div>
+        <div class="filter-content">
+          <div class="filter-group">
+            <label for="unidade">Unidade</label>
+            <select
+              id="unidade"
+              [(ngModel)]="filtroNome"
+              class="filter-input">
+              <option value="">Selecione</option>
+              <option value="asa">asa</option>
+              <option value="boi">boi</option>
+              <option value="ITF">ITF</option>
+            </select>
+          </div>
+          <div class="filter-buttons">
+            <button class="btn-new" (click)="novo()">Novo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal Novo/Editar Material -->
+<div class="modal-overlay" [class.show]="showModal" (click)="fecharModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ modoEdicao ? 'Editar' : 'Cadastro de' }} Material Base</h3>
+      <button class="modal-close-btn" (click)="fecharModal()">×</button>
+    </div>
+
+    <div class="modal-content">
+      <form #materialFormRef="ngForm">
+        <div class="form-group">
+          <label for="classe">Classe</label>
+          <select id="classe" [(ngModel)]="materialForm.classe" name="classe" class="form-control" required>
+            <option value="">Selecione</option>
+            <option value="classe1">Classe 1</option>
+            <option value="classe2">Classe 2</option>
+            <option value="classe3">Classe 3</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tipo">Tipo</label>
+          <select id="tipo" [(ngModel)]="materialForm.tipo" name="tipo" class="form-control" required>
+            <option value="">Selecione</option>
+            <option value="tipo1">Tipo 1</option>
+            <option value="tipo2">Tipo 2</option>
+            <option value="tipo3">Tipo 3</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="complemento">Complemento</label>
+          <select id="complemento" [(ngModel)]="materialForm.complemento" name="complemento" class="form-control" required>
+            <option value="">Selecione</option>
+            <option value="complemento1">Complemento 1</option>
+            <option value="complemento2">Complemento 2</option>
+            <option value="complemento3">Complemento 3</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="nomeModal">Nome</label>
+          <input
+            type="text"
+            id="nomeModal"
+            [(ngModel)]="materialForm.nome"
+            name="nomeModal"
+            class="form-control"
+            placeholder="Digite o nome do material"
+            required>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="fecharModal()">Cancelar</button>
+      <button class="btn-save" (click)="salvarMaterial()" [disabled]="!materialFormRef.valid">
+        {{ modoEdicao ? 'Atualizar' : 'Salvar' }}
+      </button>
+    </div>
+  </div>
+</div>
